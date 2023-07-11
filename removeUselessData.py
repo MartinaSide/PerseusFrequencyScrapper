@@ -92,7 +92,7 @@ def remove_columns(csv_file):
     with open(csv_file, 'r', newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
         # Create new rows with desired columns
-        rows = [row[:1] + row[3:5] for row in reader]
+        rows = [row[:2] + row[4:5] for row in reader]
 
     # Write the modified rows back to the CSV file
     with open(csv_file, 'w', newline='', encoding='utf-8') as file:
@@ -100,3 +100,16 @@ def remove_columns(csv_file):
         writer.writerows(rows)
 
     print(f'Columns removed successfully from "{csv_file}".')
+
+def clean_columns_but_keep_all_data(input_dir):
+
+    # Recursively iterate over the directory and process CSV files
+    for root, dirs, files in os.walk(input_dir):
+        for file_name in files:
+
+            if file_name.endswith('.csv') and not file_name.endswith('- cleaned.csv'):
+                input_file = os.path.join(root, file_name)
+                delete_lines_with_duplicate_word(input_file)
+                remove_columns(input_file)
+
+                print(f'{file_name} cleaned and saved as {input_file}')
